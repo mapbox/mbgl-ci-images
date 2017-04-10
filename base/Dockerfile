@@ -14,8 +14,11 @@ RUN set -eu \
 RUN set -eu \
  && apt-get update \
  && apt-get -y upgrade \
- && apt-get -y install git make curl zip unzip nodejs \
+ && apt-get -y install git make curl zip unzip nodejs python python-pip \
  && rm -rf /var/lib/apt/lists/*
+
+RUN set -eu \
+ && pip install awscli
 
 # --------------------------------------------------------------------------------------------------
 # Setup environment
