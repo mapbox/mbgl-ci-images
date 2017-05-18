@@ -39,3 +39,6 @@ docker push mbgl/ci:r${REVISION}-android-ndk-r15beta1
 
 docker build -t mbgl/ci:r${REVISION}-android-ndk-r15beta1-gradle -t mbgl/ci:latest-android-ndk-r15beta1-gradle --squash android-ndk-r15beta1-gradle
 docker push mbgl/ci:r${REVISION}-android-ndk-r15beta1-gradle
+
+docker build -t mbgl/ci:r${REVISION}-rtl-text -t mbgl/ci:latest-rtl-text --squash rtl-text
+docker push mbgl/ci:r${REVISION}-rtl-text
