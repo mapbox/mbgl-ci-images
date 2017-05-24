@@ -28,6 +28,9 @@ docker push mbgl/ci:r${REVISION}-linux-gcc-5
 docker build -t mbgl/ci:r${REVISION}-linux-gcc-5-qt-4 --squash linux-gcc-5-qt-4
 docker push mbgl/ci:r${REVISION}-linux-gcc-5-qt-4
 
+docker build -t mbgl/ci:r${REVISION}-linux-gcc-5-qt-5 --squash linux-gcc-5-qt-5
+docker push mbgl/ci:r${REVISION}-linux-gcc-5-qt-5
+
 docker build -t mbgl/ci:r${REVISION}-linux-gcc-6 --squash linux-gcc-6
 docker push mbgl/ci:r${REVISION}-linux-gcc-6
 
