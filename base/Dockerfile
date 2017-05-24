@@ -14,7 +14,7 @@ RUN set -eu \
 RUN set -eu \
  && apt-get update \
  && apt-get -y upgrade \
- && apt-get -y install git make curl zip unzip nodejs python python-pip \
+ && apt-get -y install git make curl zip unzip nodejs python python-pip locales \
  && rm -rf /var/lib/apt/lists/*
 
 RUN set -eu \
