@@ -22,8 +22,11 @@ docker push mbgl/ci:r${REVISION}-linux-clang-4
 docker build -t mbgl/ci:r${REVISION}-linux-gcc-4.9 --squash linux-gcc-4.9
 docker push mbgl/ci:r${REVISION}-linux-gcc-4.9
 
-docker build -t mbgl/ci:r${REVISION}-linux-gcc-5 linux-gcc-5
+docker build -t mbgl/ci:r${REVISION}-linux-gcc-5 -t mbgl/ci:latest-linux-gcc-5 linux-gcc-5
 docker push mbgl/ci:r${REVISION}-linux-gcc-5
+
+docker build -t mbgl/ci:r${REVISION}-linux-gcc-5-qt-4 --squash linux-gcc-5-qt-4
+docker push mbgl/ci:r${REVISION}-linux-gcc-5-qt-4
 
 docker build -t mbgl/ci:r${REVISION}-linux-gcc-6 --squash linux-gcc-6
 docker push mbgl/ci:r${REVISION}-linux-gcc-6
