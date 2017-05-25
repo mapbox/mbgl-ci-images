@@ -43,4 +43,5 @@ ENV PATH="/opt/qt-5.9/bin:$PATH"
 WORKDIR /opt
 
 RUN set -eu \
- && rm -rf qt5
+ && rm -rf qt5 \
+ && ccache --clear
