@@ -31,7 +31,7 @@ RUN set -eu \
  && ../configure \
     -opensource -confirm-license \
     -nomake tests -nomake examples \
-    -debug -prefix /opt/qt-5.9 \
+    -release -prefix /opt/qt-5.9 \
     -qt-zlib
 
 RUN set -eu \
