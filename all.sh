@@ -37,17 +37,11 @@ docker push mbgl/ci:r${REVISION}-linux-gcc-6
 docker build -t mbgl/ci:r${REVISION}-android -t mbgl/ci:latest-android --squash android
 docker push mbgl/ci:r${REVISION}-android
 
-docker build -t mbgl/ci:r${REVISION}-android-ndk-r13b -t mbgl/ci:latest-android-ndk-r13b --squash android-ndk-r13b
-docker push mbgl/ci:r${REVISION}-android-ndk-r13b
+docker build -t mbgl/ci:r${REVISION}-android-ndk-r15 -t mbgl/ci:latest-android-ndk-r15 --squash android-ndk-r15
+docker push mbgl/ci:r${REVISION}-android-ndk-r15
 
-docker build -t mbgl/ci:r${REVISION}-android-ndk-r13b-gradle -t mbgl/ci:latest-android-ndk-r13b-gradle --squash android-ndk-r13b-gradle
-docker push mbgl/ci:r${REVISION}-android-ndk-r13b-gradle
-
-docker build -t mbgl/ci:r${REVISION}-android-ndk-r15beta1 -t mbgl/ci:latest-android-ndk-r15beta1 --squash android-ndk-r15beta1
-docker push mbgl/ci:r${REVISION}-android-ndk-r15beta1
-
-docker build -t mbgl/ci:r${REVISION}-android-ndk-r15beta1-gradle -t mbgl/ci:latest-android-ndk-r15beta1-gradle --squash android-ndk-r15beta1-gradle
-docker push mbgl/ci:r${REVISION}-android-ndk-r15beta1-gradle
+docker build -t mbgl/ci:r${REVISION}-android-ndk-r15-gradle -t mbgl/ci:latest-android-ndk-r15-gradle --squash android-ndk-r15-gradle
+docker push mbgl/ci:r${REVISION}-android-ndk-r15-gradle
 
 docker build -t mbgl/ci:r${REVISION}-rtl-text -t mbgl/ci:latest-rtl-text --squash rtl-text
 docker push mbgl/ci:r${REVISION}-rtl-text

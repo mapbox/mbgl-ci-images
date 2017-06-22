@@ -1,4 +1,4 @@
-FROM mbgl/ci:latest-android
+FROM mbgl/ci:r3-android
 
 ENV ANDROID_NDK_HOME=/android/sdk/ndk-bundle
 
@@ -10,8 +10,8 @@ WORKDIR /android/sdk
 # Use desired version from https://developer.android.com/ndk/downloads/index.html
 # and update the checksum.
 RUN set -eu \
- && curl -L --retry 3 https://dl.google.com/android/repository/android-ndk-r13b-linux-x86_64.zip -o ndk.zip \
- && (echo "0600157c4ddf50ec15b8a037cfc474143f718fd0  ndk.zip" | sha1sum -c) \
+ && curl -L --retry 3 https://dl.google.com/android/repository/android-ndk-r15-linux-x86_64.zip -o ndk.zip \
+ && (echo "32b3115357ed798a8a48d7d589ffcb901693c745  ndk.zip" | sha1sum -c) \
  && unzip -q ndk.zip && rm ndk.zip && mv android-ndk-r* ndk-bundle
 
 RUN set -eu \
