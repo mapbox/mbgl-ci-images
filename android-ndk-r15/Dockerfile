@@ -1,4 +1,4 @@
-FROM mbgl/ci:r3-android
+FROM mbgl/ci:latest-android
 
 ENV ANDROID_NDK_HOME=/android/sdk/ndk-bundle
 

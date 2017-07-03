@@ -1,6 +1,18 @@
-FROM mbgl/ci:r3-android-ndk-r15
+FROM mbgl/ci:latest-android-ndk-r15
 
 RUN set -eu \
- && git pull \
+ && apt-get update \
+ && apt-get -y install ccache \
+ && rm -rf /var/lib/apt/lists/*
+
+ENV PATH="/usr/lib/ccache:$PATH"
+
+RUN set -eu \
+ && ccache --max-size=1G
+
+RUN set -eu \
+ && git clone --depth=1 https://github.com/mapbox/mapbox-gl-native.git \
+ && cd mapbox-gl-native \
  && make android-checkstyle \
- && git clean -fdx
+ && cd .. \
+ && rm -rf mapbox-gl-native

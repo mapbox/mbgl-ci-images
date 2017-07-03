@@ -35,7 +35,7 @@ RUN set -eu \
     -qt-zlib
 
 RUN set -eu \
- && make \
+ && make -j4 \
  && make install
 
 ENV PATH="/opt/qt-5.9/bin:$PATH"
@@ -45,3 +45,5 @@ WORKDIR /opt
 RUN set -eu \
  && rm -rf qt5 \
  && ccache --clear
+
+WORKDIR /src

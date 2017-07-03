@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM ubuntu:xenial-20170619
 
 ENV DEBIAN_FRONTEND="noninteractive"
 
@@ -13,11 +13,12 @@ RUN set -eu \
 
 RUN set -eu \
  && apt-get update \
- && apt-get -y upgrade \
- && apt-get -y install git make curl zip unzip nodejs python python-pip locales \
+ && apt-get -y install git make curl zip unzip nodejs python locales \
  && rm -rf /var/lib/apt/lists/*
 
+# Install PIP
 RUN set -eu \
+ && (curl https://bootstrap.pypa.io/get-pip.py | python) \
  && pip install awscli
 
 # --------------------------------------------------------------------------------------------------
@@ -32,11 +33,5 @@ ENV LD_PRELOAD=/usr/lib/libsysconfcpus.so \
     LC_ALL="en_US.UTF-8"
 
 # --------------------------------------------------------------------------------------------------
-# install code
 
 WORKDIR /src
-
-RUN set -eu \
- && git clone https://github.com/mapbox/mapbox-gl-native.git . \
- && git submodule update --init mapbox-gl-js \
- && npm install --ignore-scripts

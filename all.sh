@@ -34,6 +34,9 @@ docker push mbgl/ci:r${REVISION}-linux-gcc-5-qt-5
 docker build -t mbgl/ci:r${REVISION}-linux-gcc-6 --squash linux-gcc-6
 docker push mbgl/ci:r${REVISION}-linux-gcc-6
 
+docker build -t mbgl/ci:r${REVISION}-linux-gcc-7 --squash linux-gcc-7
+docker push mbgl/ci:r${REVISION}-linux-gcc-7
+
 docker build -t mbgl/ci:r${REVISION}-android -t mbgl/ci:latest-android --squash android
 docker push mbgl/ci:r${REVISION}-android
 
