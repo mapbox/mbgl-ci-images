@@ -21,6 +21,7 @@ This repository contains Docker files for running [Mapbox GL](https://github.com
       * **linux-gcc-4.9** (~100MB)
       * **linux-gcc-5** (0 MB)
       * **linux-gcc-6** (~500MB)
+      * **linux-gl-js** (~400MB)
       * ... (other compilers)
     * **java**: Java runtime, JDK, Google Cloud SDK (~330MB)
       * **android**: Android SDK (~1.3GB)

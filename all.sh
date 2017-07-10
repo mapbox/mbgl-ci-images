@@ -10,6 +10,9 @@ docker build -t mbgl/ci:latest-linux --squash linux
 docker build -t mbgl/ci:latest-java --squash java
 
 # Final images
+docker build -t mbgl/ci:r${REVISION}-linux-gl-js -t mbgl/ci:latest-linux-gl-js --squash linux-gl-js
+docker push mbgl/ci:r${REVISION}-linux-gl-js
+
 docker build -t mbgl/ci:r${REVISION}-linux-clang-3.9 -t mbgl/ci:latest-linux-clang-3.9 --squash linux-clang-3.9
 docker push mbgl/ci:r${REVISION}-linux-clang-3.9
 
