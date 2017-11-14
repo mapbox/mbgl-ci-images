@@ -1,0 +1,116 @@
+version: 2
+
+workflows:
+  version: 2
+  default:
+    jobs:
+      - setup
+      - base:
+          requires:
+            - setup
+      - linux:
+          requires:
+            - base
+      - linux-clang-3.9:
+          requires:
+            - linux
+      - linux-clang-3.9-node-4:
+          requires:
+            - linux-clang-3.9
+      - linux-clang-4:
+          requires:
+            - linux
+      - linux-clang-5:
+          requires:
+            - linux
+      - linux-gcc-4.9:
+          requires:
+            - linux
+      - linux-gcc-5:
+          requires:
+            - linux
+      - linux-gcc-5-qt-4:
+          requires:
+            - linux-gcc-5
+      - linux-gcc-5-qt-5:
+          requires:
+            - linux-gcc-5
+      - linux-gcc-6:
+          requires:
+            - linux
+      - linux-gcc-7:
+          requires:
+            - linux
+      - java:
+          requires:
+            - base
+      - android-ndk-r15c:
+          requires:
+            - java
+
+defaults: &defaults
+  working_directory: /app
+  docker:
+    - image: docker:17.10.0-ce-git
+  steps:
+    - checkout
+    - setup_remote_docker:
+        version: 17.10.0-ce # Some older versions don't support ARG before FROM in Dockerfiles
+    - run:
+        name: Log in to Docker Hub
+        command: docker login -u mbgl -p ${DOCKER_PASS}
+    - attach_workspace:
+        at: .
+    - run:
+        name: Revision ID
+        command: echo "Building revision $(cat .revision)"
+    - run:
+        name: Build image
+        command: docker build -t mbgl/ci:$(cat .revision)-${CIRCLE_STAGE} --build-arg REV=$(cat .revision) ${CIRCLE_STAGE}
+    - run:
+        name: Push image
+        command: docker push mbgl/ci:$(cat .revision)-${CIRCLE_STAGE}
+
+
+jobs:
+  setup:
+    <<: *defaults
+    steps:
+      - run:
+          name: Generate Revision ID
+          command: date +"%Y%m%d%H%M%S" > .revision ; echo "Building revision $(cat .revision)"
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .revision
+
+  base:
+    <<: *defaults
+
+  linux:
+    <<: *defaults
+  linux-clang-3.9:
+    <<: *defaults
+  linux-clang-3.9-node-4:
+    <<: *defaults
+  linux-clang-4:
+    <<: *defaults
+  linux-clang-5:
+    <<: *defaults
+  linux-gcc-4.9:
+    <<: *defaults
+  linux-gcc-5:
+    <<: *defaults
+  linux-gcc-5-qt-4:
+    <<: *defaults
+  linux-gcc-5-qt-5:
+    <<: *defaults
+  linux-gcc-6:
+    <<: *defaults
+  linux-gcc-7:
+    <<: *defaults
+
+  java:
+    <<: *defaults
+  android-ndk-r15c:
+    <<: *defaults

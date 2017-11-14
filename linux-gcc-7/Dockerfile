@@ -1,4 +1,5 @@
-FROM mbgl/ci:latest-linux
+ARG REV=latest
+FROM mbgl/ci:${REV}-linux
 
 # --------------------------------------------------------------------------------------------------
 # Install common packages

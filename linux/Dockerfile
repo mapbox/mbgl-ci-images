@@ -1,4 +1,5 @@
-FROM mbgl/ci:latest-base
+ARG REV=latest
+FROM mbgl/ci:${REV}-base
 
 # --------------------------------------------------------------------------------------------------
 # Install common packages
@@ -13,13 +14,8 @@ RUN set -eu \
  && apt-get update \
  && apt-get -y install cmake build-essential gdb file ruby zlib1g-dev libcurl4-openssl-dev xvfb \
                        libx11-dev libegl1-mesa-dev libgles2-mesa libxrandr-dev libxcursor-dev \
-                       libxinerama-dev lcov ccache \
+                       libxinerama-dev lcov \
  && rm -rf /var/lib/apt/lists/*
-
-ENV PATH="/usr/lib/ccache:$PATH"
-
-RUN set -eu \
- && ccache --max-size=1G
 
 # Install coveralls
 RUN set -eu \
