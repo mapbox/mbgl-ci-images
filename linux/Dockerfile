@@ -14,7 +14,7 @@ RUN set -eu \
  && apt-get update \
  && apt-get -y install cmake build-essential gdb file ruby zlib1g-dev libcurl4-openssl-dev xvfb \
                        libx11-dev libegl1-mesa-dev libgles2-mesa libxrandr-dev libxcursor-dev \
-                       libxinerama-dev lcov \
+                       libxinerama-dev libgl1-mesa-dev libxi6 dbus lcov \
  && rm -rf /var/lib/apt/lists/*
 
 # Install coveralls

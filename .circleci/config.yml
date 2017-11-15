@@ -32,7 +32,7 @@ workflows:
       - linux-gcc-5-qt-4:
           requires:
             - linux-gcc-5
-      - linux-gcc-5-qt-5:
+      - linux-gcc-5-qt-5.9:
           requires:
             - linux-gcc-5
       - linux-gcc-6:
@@ -103,7 +103,7 @@ jobs:
     <<: *defaults
   linux-gcc-5-qt-4:
     <<: *defaults
-  linux-gcc-5-qt-5:
+  linux-gcc-5-qt-5.9:
     <<: *defaults
   linux-gcc-6:
     <<: *defaults
