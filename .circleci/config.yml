@@ -44,7 +44,7 @@ workflows:
       - java:
           requires:
             - base
-      - android-ndk-r15c:
+      - android-ndk-r16:
           requires:
             - java
 
@@ -112,5 +112,5 @@ jobs:
 
   java:
     <<: *defaults
-  android-ndk-r15c:
+  android-ndk-r16:
     <<: *defaults
