@@ -4,10 +4,11 @@ workflows:
   version: 2
   default:
     jobs:
-      - setup
+      - start:
+          type: approval
       - base:
           requires:
-            - setup
+            - start
       - linux:
           requires:
             - base
