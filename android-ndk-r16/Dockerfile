@@ -49,13 +49,3 @@ RUN set -eu \
  && rm -rf "${ANDROID_HOME}/licenses"
 
 WORKDIR /src
-
-# --------------------------------------------------------------------------------------------------
-# Cache Gradle dependencies
-
-RUN set -eu \
- && git clone --depth=1 https://github.com/mapbox/mapbox-gl-native.git \
- && cd mapbox-gl-native \
- && make android-checkstyle \
- && cd .. \
- && rm -rf mapbox-gl-native
