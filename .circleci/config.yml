@@ -66,6 +66,7 @@ defaults: &defaults
     - run:
         name: Build image
         command: docker build -t mbgl/${CIRCLE_SHA1:0:10}:${CIRCLE_STAGE} --build-arg REV=${CIRCLE_SHA1:0:10} ${CIRCLE_STAGE}
+        no_output_timeout: 30m
     - run:
         name: Push image
         command: docker push mbgl/${CIRCLE_SHA1:0:10}:${CIRCLE_STAGE}
