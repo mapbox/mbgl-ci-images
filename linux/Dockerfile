@@ -1,5 +1,5 @@
 ARG REV=latest
-FROM mbgl/ci:${REV}-base
+FROM mbgl/${REV}:base
 
 # --------------------------------------------------------------------------------------------------
 # Install common packages

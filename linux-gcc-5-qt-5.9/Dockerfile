@@ -1,5 +1,5 @@
 ARG REV=latest
-FROM mbgl/ci:${REV}-linux-gcc-5
+FROM mbgl/${REV}:linux-gcc-5
 
 # --------------------------------------------------------------------------------------------------
 # Install Qt

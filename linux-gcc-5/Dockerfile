@@ -1,5 +1,5 @@
 ARG REV=latest
-FROM mbgl/ci:${REV}-linux
+FROM mbgl/${REV}:linux
 
 # --------------------------------------------------------------------------------------------------
 # Set environment variables

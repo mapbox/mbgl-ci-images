@@ -1,5 +1,5 @@
 ARG REV=latest
-FROM mbgl/ci:${REV}-linux-clang-3.9
+FROM mbgl/${REV}:linux-clang-3.9
 
 # --------------------------------------------------------------------------------------------------
 # Remove Node v6 from base image

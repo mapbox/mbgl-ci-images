@@ -59,31 +59,18 @@ defaults: &defaults
     - run:
         name: Log in to Docker Hub
         command: docker login -u mbgl -p ${DOCKER_PASS}
-    - attach_workspace:
-        at: .
     - run:
         name: Revision ID
-        command: echo "Building revision $(cat .revision)"
+        command: echo "Building revision ${CIRCLE_SHA1:0:10}"
     - run:
         name: Build image
-        command: docker build -t mbgl/ci:$(cat .revision)-${CIRCLE_STAGE} --build-arg REV=$(cat .revision) ${CIRCLE_STAGE}
+        command: docker build -t mbgl/${CIRCLE_SHA1:0:10}:${CIRCLE_STAGE} --build-arg REV=${CIRCLE_SHA1:0:10} ${CIRCLE_STAGE}
     - run:
         name: Push image
-        command: docker push mbgl/ci:$(cat .revision)-${CIRCLE_STAGE}
+        command: docker push mbgl/${CIRCLE_SHA1:0:10}:${CIRCLE_STAGE}
 
 
 jobs:
-  setup:
-    <<: *defaults
-    steps:
-      - run:
-          name: Generate Revision ID
-          command: date +"%Y%m%d%H%M%S" > .revision ; echo "Building revision $(cat .revision)"
-      - persist_to_workspace:
-          root: .
-          paths:
-            - .revision
-
   base:
     <<: *defaults
 

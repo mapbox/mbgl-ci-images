@@ -1,5 +1,5 @@
 ARG REV=latest
-FROM mbgl/ci:${REV}-java
+FROM mbgl/${REV}:java
 
 ENV ANDROID_NDK_HOME=/android/sdk/ndk-bundle \
     ANDROID_HOME=/android/sdk \
