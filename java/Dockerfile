@@ -1,4 +1,5 @@
-FROM mbgl/ci:latest-base
+ARG REV=latest
+FROM mbgl/ci:${REV}-base
 
 # --------------------------------------------------------------------------------------------------
 # Install system packages

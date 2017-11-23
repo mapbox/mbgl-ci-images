@@ -1,4 +1,5 @@
-FROM mbgl/ci:latest-linux-gcc-5
+ARG REV=latest
+FROM mbgl/ci:${REV}-linux-gcc-5
 
 # --------------------------------------------------------------------------------------------------
 # Set environment variables
