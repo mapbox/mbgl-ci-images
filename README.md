@@ -4,10 +4,10 @@ This repository contains Docker files for running [Mapbox GL](https://github.com
 
 ### Guidelines
 
-* ⚠️ **Never overwrite published tags.** Instead, we use a revision system, prefixing all names with `rN`, with `N` being a linearly increasing number.
-* **Anchor images in hierarchy.** We use a hierarchy of images so that shared components (e.g. curl/zip/node) are only contained in one layer. CircleCI caches images, and using a shared base image means that we'll have to download fewer images from DockerHub. See the hierarcy below.
-* **Do not delete old images from DockerHub**. Retaining old images on DockerHub means that we can still build older branches.
-* **Squash individual images** with `--squash`. This means that all layers within an image are squashed into one layer, and reduces the file size dramatically, in particular when you are generating temporary files during installation (e.g. `apt-get`, SDK downloads). In the same vein, clean up temporary files at the end or within the same layer to keep our image sizes small.
+* ⚠️ **Never overwrite published tags.** Instead, we use a revision system, using a Docker Hub repository for every set of images. The name of the repository is the 10 first characters of the Git SHA.
+* **Anchor images in hierarchy.** We use a hierarchy of images so that shared components (e.g. curl/zip/node) are only contained in one layer. CircleCI caches images, and using a shared base image means that we'll have to download fewer images from Docker Hub. See the hierarcy below.
+* **Do not delete old images from Docker Hub**. Retaining old images on Docker Hub means that we can still build older branches.
+* **Reduce ephemeral/temporary data** by combining multiple commands into one `RUN` command. Unfortunately, Circle CI doesn't support `--squash`, so we'll have to make sure that we're not creating unused files. E.g. when you run `apt-get update`, also run `rm -rf /var/lib/apt/lists/*` in the same step to remove the repository metadata.
 
 
 
@@ -21,55 +21,23 @@ This repository contains Docker files for running [Mapbox GL](https://github.com
       * **linux-gcc-4.9** (~100MB)
       * **linux-gcc-5** (0 MB)
       * **linux-gcc-6** (~500MB)
-      * **linux-gl-js** (~400MB)
       * ... (other compilers)
     * **java**: Java runtime, JDK, Google Cloud SDK (~330MB)
-      * **android**: Android SDK (~1.3GB)
-        * **android-ndk-r13b**: Android NDK r13b (~2.35GB)
-          * **android-ndk-r13b-gradle**: Gradle dependencies of our project (~320MB)
-        * **android-ndk-r15beta1**: Android NDK r15 beta1
-          * **android-ndk-r15beta1-gradle**: Gradle dependencies of our project
-        * ... (other NDK images)
+      * **android-ndk-r16**: Android NDK r16 (~2.35GB)
+      * ... (other NDK images)
 
 
 
 ### Adding a new image
 
-When you want to add a new image, e.g. a new compiler version or a new Android NDK version, duplicate an existing folder, and change the `Dockerfile` in it to suite your needs. To build a `linux-clang-5` image locally, first ensure that the base image revision you're using is tagged as the `latest` image (all Dockerfiles start with a `FROM mbgl/ci:latest-...` directive):
+When you want to add a new image, e.g. a new compiler version or a new Android NDK version, duplicate or rename an existing folder, and change the `Dockerfile` in it to suite your needs. There's no need to keep previous versions of e.g. the Android NDK around. Legacy branches of mapbox-gl-native will use legacy Docker images that contain the legacy NDKs.
 
-```
-docker tag mbgl/ci:latest-linux mbgl/ci:r2-linux
-```
+### Workflow
 
-Then, you can attempt building your image:
+Whenever an image in the hierarchy changes, we're completely rebuilding the entire image hierarchy to benefit from Circle's Docker image caching. Builds are triggered when you start a **pull request**. However, builds are paused, and you'll have to manually click on the Resume button on Circle CI to start building. We do this to prevent building images too frequently, or when merging changes to master.
 
-```
-docker build -t mbgl/ci:latest-linux-clang-5 linux-clang-5
-```
+Every set of images has a "Revision ID", which is based on the first 10 characters of the Git SHA. You can also see this ID by looking into the "Revision ID" step on any Circle CI build in the workflow.
 
-Once you're satisfied with the image, rebuild it in a squashed way, tag it as the release image and push it:
+When the workflow you're building **fails**, please remove the associated repository from Docker Hub to prevent heaps of unused Docker images piling up.
 
-```
-docker build -t mbgl/ci:latest-linux-clang-5 --squash linux-clang-5
-docker tag mbgl/ci:r2-linux-clang-5 mbgl/ci:latest-linux-clang-5
-docker push mbgl/ci:r2-linux-clang-5
-```
-
-⚠️ Never push `latest` images!
-
-If the image you're creating has not existed before, you can reuse the existing revision.
-
-
-
-### Creating a new revision
-
-Sometimes it's necessary to create an entirely new revision. This is the case when you want to upgrade components in the base images, such as `curl`, `python`, or a new Android SDK or Java version, as well as when you add new tools somewhere in the hierarchy.
-
-When creating a new revision, delete any images that you don't need anymore in the current test run. Old branches will continue to use the Docker images in the previous revision, so there's no need to preserve e.g. old NDKs in the current branch.
-
-To build a new revision, change the `all.sh` script to only include the relevant images, and run with
-
-```
-REVISION=3 ./all.sh
-```
-
+Once a set of images completes building, it's time to update mapbox-gl-native. To do so, create a pull request that changes the Revision ID to the new one. If it succeeds, it's time "merge" the pull request in this repository that changed the image files. Instead of creating merge commits or merges via the GitHub UI, please do a fast-forward merge by switching to the master branch and running `git merge --ff-only <branchname>`. This allows use to remain a 1:1 relation between the Docker image Revision IDs and the Commit SHAs in this repository.
