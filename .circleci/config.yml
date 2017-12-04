@@ -12,6 +12,9 @@ workflows:
       - linux:
           requires:
             - base
+      - linux-clang-3.8-libcxx:
+          requires:
+            - linux
       - linux-clang-3.9:
           requires:
             - linux
@@ -77,6 +80,8 @@ jobs:
     <<: *defaults
 
   linux:
+    <<: *defaults
+  linux-clang-3.8-libcxx:
     <<: *defaults
   linux-clang-3.9:
     <<: *defaults
