@@ -41,3 +41,5 @@ Every set of images has a "Revision ID", which is based on the first 10 characte
 When the workflow you're building **fails**, please remove the associated repository from Docker Hub to prevent heaps of unused Docker images piling up.
 
 Once a set of images completes building, it's time to update mapbox-gl-native. To do so, create a pull request that changes the Revision ID to the new one. If it succeeds, it's time "merge" the pull request in this repository that changed the image files. Instead of creating merge commits or merges via the GitHub UI, please do a fast-forward merge by switching to the master branch and running `git merge --ff-only <branchname>`. This allows use to remain a 1:1 relation between the Docker image Revision IDs and the Commit SHAs in this repository.
+
+To reduce the number of image updates, and thus the number of images we have to keep on Docker Hub, we'll collect a few changes, merging everything into one branch before merging it to master.
