@@ -23,8 +23,8 @@ RUN set -eu \
 # Use desired version from https://developer.android.com/ndk/downloads/index.html
 # and update the checksum.
 RUN set -eu \
- && curl -L --retry 3 https://dl.google.com/android/repository/android-ndk-r16b-linux-x86_64.zip -o ndk.zip \
- && (echo "42aa43aae89a50d1c66c3f9fdecd676936da6128  ndk.zip" | sha1sum -c) \
+ && curl -L --retry 3 https://dl.google.com/android/repository/android-ndk-r17-beta2-linux-x86_64.zip -o ndk.zip \
+ && (echo "e1eebae781abcf3a0382f58142566dd71206840e  ndk.zip" | sha1sum -c) \
  && unzip -q ndk.zip && rm ndk.zip && mv android-ndk-r* ndk-bundle
 
 # --------------------------------------------------------------------------------------------------
@@ -40,7 +40,9 @@ RUN set -eu \
         "platforms;android-26" \
         "build-tools;26.0.3" \
         "platforms;android-27" \
-        "build-tools;27.0.2" \
+        "build-tools;27.0.3" \
+        "platforms;android-P" \
+        "build-tools;28.0.0-rc1" \
         "extras;android;m2repository" \
         "patcher;v4" \
         "extras;google;m2repository" \
