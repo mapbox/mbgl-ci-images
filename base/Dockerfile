@@ -13,7 +13,7 @@ RUN set -eu \
 
 RUN set -eu \
  && apt-get update \
- && apt-get -y install git make curl zip unzip nodejs ccache python locales \
+ && apt-get -y install git make curl zip unzip xz-utils nodejs ccache python locales \
  && rm -rf /var/lib/apt/lists/*
 
 # Install PIP
