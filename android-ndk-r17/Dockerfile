@@ -3,6 +3,7 @@ FROM mbgl/${REV}:java
 
 ENV ANDROID_NDK_HOME=/android/sdk/ndk-bundle \
     ANDROID_HOME=/android/sdk \
+    PATH="/flutter/sdk/flutter/bin:${PATH}" \
     GRADLE_OPTS=-Dorg.gradle.daemon=false
 
 # --------------------------------------------------------------------------------------------------
@@ -47,5 +48,17 @@ RUN set -eu \
         "extras;m2repository;com;android;support;constraint;constraint-layout;1.0.2" \
         "cmake;3.6.4111459" \
  && rm -rf "${ANDROID_HOME}/licenses"
+
+# --------------------------------------------------------------------------------------------------
+# Install Flutter SDK
+
+WORKDIR /flutter/sdk
+
+# Use most recent version from https://flutter.io/setup-linux/
+
+RUN set -eu \
+ && curl -L --retry 3 https://storage.googleapis.com/flutter_infra/releases/beta/linux/flutter_linux_v0.4.4-beta.tar.xz -o flutter.tar.xz \
+ && tar xf flutter.tar.xz && rm flutter.tar.xz
+
 
 WORKDIR /src
