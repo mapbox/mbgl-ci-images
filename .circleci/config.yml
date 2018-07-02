@@ -18,9 +18,6 @@ workflows:
       - linux-clang-3.9:
           requires:
             - linux
-      - linux-clang-3.9-node-4:
-          requires:
-            - linux-clang-3.9
       - linux-clang-4:
           requires:
             - linux
@@ -84,8 +81,6 @@ jobs:
   linux-clang-3.8-libcxx:
     <<: *defaults
   linux-clang-3.9:
-    <<: *defaults
-  linux-clang-3.9-node-4:
     <<: *defaults
   linux-clang-4:
     <<: *defaults
