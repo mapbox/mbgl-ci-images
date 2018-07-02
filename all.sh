@@ -19,9 +19,6 @@ docker push mbgl/ci:r${REVISION}-linux-clang-3.8-libcxx
 docker build -t mbgl/ci:r${REVISION}-linux-clang-3.9 -t mbgl/ci:latest-linux-clang-3.9 --squash linux-clang-3.9
 docker push mbgl/ci:r${REVISION}-linux-clang-3.9
 
-docker build -t mbgl/ci:r${REVISION}-linux-clang-3.9-node-4 --squash linux-clang-3.9-node-4
-docker push mbgl/ci:r${REVISION}-linux-clang-3.9-node-4
-
 docker build -t mbgl/ci:r${REVISION}-linux-clang-4 --squash linux-clang-4
 docker push mbgl/ci:r${REVISION}-linux-clang-4
 
