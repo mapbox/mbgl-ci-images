@@ -2,6 +2,19 @@ ARG REV=latest
 FROM mbgl/${REV}:linux-gcc-5
 
 # --------------------------------------------------------------------------------------------------
+# Install protobuf and pkg-config
+
+# Add the `ppa:maarten-fonville/protobuf` repository first, which contains newer version of
+# the `protobuf` packages.
+RUN set -eu \
+ && apt-get update \
+ && apt-get -y install software-properties-common \
+ && add-apt-repository -y ppa:maarten-fonville/protobuf \
+ && apt-get update \
+ && apt-get -y install protobuf-compiler libprotobuf-dev pkg-config \
+ && rm -rf /var/lib/apt/lists/*
+
+# --------------------------------------------------------------------------------------------------
 # Install Qt
 
 # Use most recent version from http://download.qt.io/archive/qt/ and update the checksum.
