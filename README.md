@@ -5,7 +5,7 @@ This repository contains Docker files for running [Mapbox GL](https://github.com
 ### Guidelines
 
 * ⚠️ **Never overwrite published tags.** Instead, we use a revision system, using a Docker Hub repository for every set of images. The name of the repository is the 10 first characters of the Git SHA.
-* **Anchor images in hierarchy.** We use a hierarchy of images so that shared components (e.g. curl/zip/node) are only contained in one layer. CircleCI caches images, and using a shared base image means that we'll have to download fewer images from Docker Hub. See the hierarcy below.
+* **Anchor images in hierarchy.** We use a hierarchy of images so that shared components (e.g. curl/zip/node) are only contained in one layer. CircleCI caches images, and using a shared base image means that we'll have to download fewer images from Docker Hub. See the hierarchy below.
 * **Do not delete old images from Docker Hub**. Retaining old images on Docker Hub means that we can still build older branches.
 * **Reduce ephemeral/temporary data** by combining multiple commands into one `RUN` command. Unfortunately, Circle CI doesn't support `--squash`, so we'll have to make sure that we're not creating unused files. E.g. when you run `apt-get update`, also run `rm -rf /var/lib/apt/lists/*` in the same step to remove the repository metadata.
 
