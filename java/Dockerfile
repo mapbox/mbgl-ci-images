@@ -1,6 +1,8 @@
 ARG REV=latest
 FROM mbgl/${REV}:base
 
+ENV JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
+
 # --------------------------------------------------------------------------------------------------
 # Install system packages
 
