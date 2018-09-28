@@ -1,0 +1,14 @@
+FROM mbgl/linux-base
+
+# Install Clang
+RUN set -eu \
+ && apt-get update \
+ && apt-get -y install clang-7 clang++-7 clang-tidy-7 clang-format-7 \
+ && rm -rf /var/lib/apt/lists/*
+
+ENV CC="clang-7" \
+    CXX="clang++-7" \
+    CLANG_FORMAT="clang-format-7" \
+    CLANG_TIDY="clang-tidy-7"
+
+WORKDIR /src

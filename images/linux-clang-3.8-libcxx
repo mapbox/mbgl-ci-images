@@ -1,0 +1,15 @@
+FROM mbgl/linux-base
+
+# Install Clang
+RUN set -eu \
+ && apt-get update \
+ && apt-get -y install clang-3.8 clang++-3.8 clang-tidy-3.8 clang-format-3.8 libc++-dev libc++abi-dev \
+ && rm -rf /var/lib/apt/lists/*
+
+ENV CC="clang-3.8" \
+    CXX="clang++-3.8" \
+    CXXFLAGS="-stdlib=libc++ -isystem /usr/include/libcxxabi" \
+    CLANG_FORMAT="clang-format-3.8" \
+    CLANG_TIDY="clang-tidy-3.8"
+
+WORKDIR /src

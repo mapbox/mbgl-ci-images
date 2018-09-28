@@ -1,0 +1,14 @@
+FROM mbgl/linux-base
+
+# Install Clang
+RUN set -eu \
+ && apt-get update \
+ && apt-get -y install clang-4.0 clang++-4.0 clang-tidy-4.0 clang-format-4.0 \
+ && rm -rf /var/lib/apt/lists/*
+
+ENV CC="clang-4.0" \
+    CXX="clang++-4.0" \
+    CLANG_FORMAT="clang-format-4.0" \
+    CLANG_TIDY="clang-tidy-4.0"
+
+WORKDIR /src

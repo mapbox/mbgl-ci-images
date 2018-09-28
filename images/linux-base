@@ -1,0 +1,71 @@
+FROM ubuntu:xenial-20181005
+ENV DEBIAN_FRONTEND="noninteractive"
+
+# Add base filesystems
+ADD filesystem/libsysconfcpus.tar.gz \
+    filesystem/apt-toolchain.tar.gz \
+    filesystem/apt-llvm.tar.gz \
+    /
+
+# libsysconfcpus.so can be used to alter the number of CPUs reported by the system
+ENV LD_PRELOAD=/usr/lib/libsysconfcpus.so
+
+# Add apt keys
+RUN set -eu \
+ && (find /tmp/*.gpg | xargs -n1 apt-key add) \
+ && rm /tmp/*.gpg
+
+# Install base packages
+RUN set -eu \
+ && apt-get update \
+ && apt-get -y install git curl python zlib1g-dev libcurl3 xvfb \
+ && rm -rf /var/lib/apt/lists/*
+
+# Install devel packages
+RUN set -eu \
+ && apt-get update \
+ && apt-get -y install make gdb lcov binutils ccache zlib1g-dev libcurl4-openssl-dev libjemalloc-dev \
+ && rm -rf /var/lib/apt/lists/*
+
+# Install OpenGL-related packages
+RUN set -eu \
+ && apt-get update \
+ && apt-get -y install libegl1-mesa-dev libgles2-mesa-dev libgl1-mesa-dev libxrandr-dev libxcursor-dev libxinerama-dev libxi-dev \
+ && rm -rf /var/lib/apt/lists/*
+
+# Install awscli
+RUN set -eu \
+ && (curl https://bootstrap.pypa.io/get-pip.py | python) \
+ && pip install awscli
+
+# Install CMake
+# Check https://cmake.org/download/ for releases + hashes
+RUN set -eu && MAJOR=3 MINOR=12 PATCH=4 HASH=486edd6710b5250946b4b199406ccbf8f567ef0e23cfe38f7938b8c78a2ffa5f \
+ && SLUG=cmake-$MAJOR.$MINOR.$PATCH-Linux-x86_64 \
+ && curl -L --retry 3 -O https://cmake.org/files/v$MAJOR.$MINOR/$SLUG.tar.gz \
+ && (echo "$HASH  $SLUG.tar.gz" | shasum -c) \
+ && tar xzf $SLUG.tar.gz --strip-components=1 -C /usr $SLUG/bin/cmake $SLUG/share/cmake-$MAJOR.$MINOR \
+ && rm $SLUG.tar.gz
+
+# Install logbt
+RUN set -eu \
+ && curl -L --retry 3 https://raw.githubusercontent.com/mapbox/logbt/v2.0.3/bin/logbt -o /usr/bin/logbt \
+ && (echo "a3cc77a0269ca627c88975909e89d7eeee35146805b7b09564d79c876e1626f2  /usr/bin/logbt" | shasum -c) \
+ && chmod +x /usr/bin/logbt
+
+# Install apitrace from Mason
+RUN set -eu \
+ && curl -L --retry 3 -O https://mason-binaries.s3.amazonaws.com/linux-x86_64/apitrace/2018-05-16-7fadfba.tar.gz \
+ && (echo "9d70587fd453e53c5257f1e1ca90a2203aa0d55d2db8c02dac42e558fb8b2a2f  2018-05-16-7fadfba.tar.gz" | shasum -c) \
+ && tar xzf 2018-05-16-7fadfba.tar.gz --exclude "mason.ini" -C /usr \
+ && rm 2018-05-16-7fadfba.tar.gz
+
+# Install Node.js
+# Check https://nodejs.org/en/download/releases/ for releases
+ENV NVM_DIR="/root/.nvm" \
+    PATH="/root/.nvm/versions/node/v10.13.0/bin:$PATH"
+RUN set -e \
+ && git -c advice.detachedHead=false clone https://github.com/creationix/nvm.git -b v0.33.11 --depth=1 "$NVM_DIR" \
+ && . "$NVM_DIR/nvm.sh" \
+ && nvm install v8.12.0 \
+ && nvm install v10.13.0

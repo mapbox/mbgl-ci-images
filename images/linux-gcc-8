@@ -1,0 +1,12 @@
+FROM mbgl/linux-base
+
+# Install Clang
+RUN set -eu \
+ && apt-get update \
+ && apt-get -y install gcc-8 g++-8 \
+ && rm -rf /var/lib/apt/lists/*
+
+ENV CC="gcc-8" \
+    CXX="g++-8"
+
+WORKDIR /src
