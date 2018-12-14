@@ -1,0 +1,16 @@
+FROM mbgl/android-ndk-r17c
+
+RUN set -eu \
+ && apt-get update \
+ && apt-get -y install locales \
+ && rm -rf /var/lib/apt/lists/* \
+ && locale-gen en_US.UTF-8
+
+RUN set -eu \
+ && curl -L --retry 3 https://github.com/facebook/buck/releases/download/v2018.10.29.01/buck.2018.10.29.01_all.deb -o buck.deb \
+ && (echo "1950df7f7c08c62cc047c72ae931b7d923bc35e6dcf00dfd1be635f6bf15ce76  buck.deb" | sha256sum -c) \
+ && dpkg -i --ignore-depends=openjdk-8-jre buck.deb \
+ && rm buck.deb
+
+ENV NO_BUCKD=1 \
+    LC_ALL="en_US.UTF-8"
