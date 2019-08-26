@@ -1,9 +1,10 @@
 FROM mbgl/linux-gcc-5
 
-# Install Qt installer dependencies
+# Install Qt installer dependencies and fonts-noto-cjk font
+# that is used for local glyph rasterizer unit tests.
 RUN set -eu \
  && apt-get update \
- && apt-get -y install dbus \
+ && apt-get -y install dbus fonts-noto-cjk \
  && rm -rf /var/lib/apt/lists/*
 
 # Use most recent version from http://download.qt.io/archive/qt/ and update the checksum.
