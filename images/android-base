@@ -43,3 +43,7 @@ RUN set -e \
 ENV ANDROID_NDK_HOME=/android/sdk/ndk-bundle \
     ANDROID_HOME=/android/sdk \
     GRADLE_OPTS=-Dorg.gradle.daemon=false
+
+#install Microsoft app center
+RUN set -eu \
+ && npm install -g appcenter-cli
