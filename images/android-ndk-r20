@@ -25,10 +25,9 @@ RUN set -eu \
  && echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" > "${ANDROID_HOME}/licenses/android-sdk-license" \
  && tools/bin/sdkmanager \
         "platform-tools" \
-        "platforms;android-27" \
-        "build-tools;27.0.3" \
         "platforms;android-28" \
         "build-tools;28.0.3" \
+        "platforms;android-29" \
         "build-tools;29.0.0" \
         "extras;android;m2repository" \
         "patcher;v4" \
