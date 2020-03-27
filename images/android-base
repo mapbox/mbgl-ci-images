@@ -17,7 +17,7 @@ RUN set -eu \
 # Install base packages
 RUN set -eu \
  && apt-get update \
- && apt-get -y install git curl make python zip unzip ccache openjdk-8-jdk-headless \
+ && apt-get -y install git curl make python3 python3-pip zip unzip ccache openjdk-8-jdk-headless \
  && rm -rf /var/lib/apt/lists/*
 
 # Install Google Cloud SDK
@@ -28,8 +28,7 @@ RUN set -eu \
 
 # Install awscli
 RUN set -eu \
- && (curl https://bootstrap.pypa.io/get-pip.py | python) \
- && pip install awscli
+ && pip3 install awscli
 
 # Install Node.js
 # Check https://nodejs.org/en/download/releases/ for releases
