@@ -1,4 +1,4 @@
-FROM mbgl/android-base:6e3292f2ca
+FROM mbgl/android-base:3d72c110c8
 
 WORKDIR /android/sdk
 
