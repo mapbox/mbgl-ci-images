@@ -18,7 +18,7 @@ RUN set -eu \
 RUN set -eu \
  && apt-get update \
  && apt-get -y install git curl make python3 python3-pip zip unzip ccache openjdk-8-jdk-headless apt-transport-https software-properties-common \
- && update-alternatives --install /usr/bin/python python /usr/bin/python3 1
+ && update-alternatives --install /usr/bin/python python /usr/bin/python3 1 \
  && rm -rf /var/lib/apt/lists/*
 
 # Install CLI tools for CI scripting
