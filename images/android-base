@@ -1,24 +1,21 @@
-FROM ubuntu:xenial-20181005
+FROM ubuntu:focal-20200606
+
+# Avoid attempting to open dialog boxes
 ENV DEBIAN_FRONTEND="noninteractive"
 
-# Add base filesystems
-ADD filesystem/libsysconfcpus.tar.gz \
-    filesystem/apt-google-cloud-sdk.tar.gz \
-    /
-
-# libsysconfcpus.so can be used to alter the number of CPUs reported by the system
-ENV LD_PRELOAD=/usr/lib/libsysconfcpus.so
-
-# Add apt keys
-RUN set -eu \
- && (find /tmp/*.gpg | xargs -n1 apt-key add) \
- && rm /tmp/*.gpg
+# Additional filesystems
+ADD filesystem/libsysconfcpus.tar.gz /
 
 # Install base packages
 RUN set -eu \
  && apt-get update \
- && apt-get -y install git curl make python3 python3-pip zip unzip ccache openjdk-8-jdk-headless apt-transport-https software-properties-common \
- && update-alternatives --install /usr/bin/python python /usr/bin/python3 1 \
+ && apt-get -y install sudo git curl python python3 wget make python3-pip zip zlib1g \
+ && apt-get -y install software-properties-common \
+ && rm -rf /var/lib/apt/lists/*
+
+RUN set -eu \
+ && apt-get update \
+ && apt-get -y install unzip ccache openjdk-8-jdk-headless apt-transport-https software-properties-common \
  && rm -rf /var/lib/apt/lists/*
 
 # Install CLI tools for CI scripting
@@ -29,11 +26,13 @@ RUN set -eu \
  && apt-get -y install jq gh \
  && rm -rf /var/lib/apt/lists/*
 
-# Install Google Cloud SDK
+# Install gcloud for Firebase testing
 RUN set -eu \
- && apt-get update \
- && apt-get -y install google-cloud-sdk \
- && rm -rf /var/lib/apt/lists/*
+  && echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list \
+  && wget -O - https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - \
+  && apt-get update -y \
+  && apt-get install google-cloud-sdk -y \
+  && apt-get autoremove --purge -y && apt-get clean
 
 # Install awscli
 RUN set -eu \
