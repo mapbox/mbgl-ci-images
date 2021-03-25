@@ -26,6 +26,7 @@ RUN set -eu \
  && tools/bin/sdkmanager \
         "--sdk_root=${ANDROID_HOME}" \
         "platform-tools" \
+        "build-tools;29.0.3" \
         "build-tools;30.0.3" \
         "platforms;android-30" \
         "extras;android;m2repository" \
