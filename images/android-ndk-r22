@@ -2,6 +2,15 @@ FROM mbgl/android-base
 
 WORKDIR /android/sdk
 
+# Install JDK 15
+RUN set -eu \
+ && add-apt-repository ppa:openjdk-r/ppa
+ENV JAVA_HOME=/usr/lib/jvm/java-1.15.0-openjdk-amd64
+RUN set -eu \
+ && apt-get update \
+ && apt-get -y install openjdk-15-jdk-headless \
+ && rm -rf /var/lib/apt/lists/*
+
 # Install Android SDK
 # Use most recent version from https://developer.android.com/studio/index.html#command-tools
 # and update the checksum.
