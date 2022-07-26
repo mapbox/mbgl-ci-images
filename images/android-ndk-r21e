@@ -35,6 +35,8 @@ RUN set -eu \
         "build-tools;31.0.0" \
         "platforms;android-30" \
         "platforms;android-31" \
+        "platforms;android-32" \
+        "platforms;android-33" \
         "extras;android;m2repository" \
         "patcher;v4" \
         "extras;google;m2repository" \
