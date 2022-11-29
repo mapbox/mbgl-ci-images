@@ -42,6 +42,7 @@ RUN set -eu \
         "extras;google;m2repository" \
         "extras;m2repository;com;android;support;constraint;constraint-layout;1.0.2" \
         "cmake;3.10.2.4988404" \
+        "cmake;3.22.1" \
  && rm -rf "${ANDROID_HOME}/licenses"
 
 WORKDIR /src
