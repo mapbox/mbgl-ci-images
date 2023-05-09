@@ -1,0 +1,29 @@
+FROM mbgl/android-base
+
+WORKDIR /android/sdk
+
+# Install Android SDK
+# Use most recent version from https://developer.android.com/studio/index.html#command-tools
+# and update the checksum.
+RUN set -eu \
+ && curl -L --retry 3 https://dl.google.com/android/repository/commandlinetools-linux-7583922_latest.zip -o tools.zip \
+ && (echo "124f2d5115eee365df6cf3228ffbca6fc3911d16f8025bebd5b1c6e2fcfa7faf  tools.zip" | sha256sum -c) \
+ && unzip -q tools.zip && rm tools.zip
+
+# Install dependencies and build tools
+
+RUN set -eu \
+ && mkdir -p "${ANDROID_HOME}/licenses" \
+ && echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" > "${ANDROID_HOME}/licenses/android-sdk-license" \
+ && cmdline-tools/bin/sdkmanager \
+        "--sdk_root=${ANDROID_HOME}" \
+        "platform-tools" \
+        "build-tools;31.0.0" \
+        "platforms;android-33" \
+        "extras;android;m2repository" \
+        "patcher;v4" \
+        "extras;google;m2repository" \
+        "extras;m2repository;com;android;support;constraint;constraint-layout;1.0.2" \
+ && rm -rf "${ANDROID_HOME}/licenses"
+
+WORKDIR /src
