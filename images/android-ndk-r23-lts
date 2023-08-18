@@ -1,0 +1,48 @@
+FROM mbgl/android-base
+
+WORKDIR /android/sdk
+
+# Install Android SDK
+# Use most recent version from https://developer.android.com/studio/index.html#command-tools
+# and update the checksum.
+RUN set -eu \
+ && curl -L --retry 3 https://dl.google.com/android/repository/commandlinetools-linux-7583922_latest.zip -o tools.zip \
+ && (echo "124f2d5115eee365df6cf3228ffbca6fc3911d16f8025bebd5b1c6e2fcfa7faf  tools.zip" | sha256sum -c) \
+ && unzip -q tools.zip && rm tools.zip
+
+# Install Android NDK
+# Use desired version from https://developer.android.com/ndk/downloads/index.html
+# and update the checksum.
+RUN set -eu \
+ && curl -L --retry 3 https://dl.google.com/android/repository/android-ndk-r23c-linux.zip -o ndk.zip \
+ && (echo "e5053c126a47e84726d9f7173a04686a71f9a67a  ndk.zip" | sha1sum -c) \
+ && unzip -q ndk.zip && rm ndk.zip && mv android-ndk-r* ndk-bundle
+
+# Install dependencies and build tools
+
+RUN set -eu \
+ && mkdir -p "${ANDROID_HOME}/licenses" \
+ && echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" > "${ANDROID_HOME}/licenses/android-sdk-license" \
+ && cmdline-tools/bin/sdkmanager \
+        "--sdk_root=${ANDROID_HOME}" \
+        "platform-tools" \
+        "platforms;android-28" \
+        "build-tools;28.0.3" \
+        "platforms;android-29" \
+        "build-tools;29.0.2" \
+        "build-tools;30.0.2" \
+        "build-tools;30.0.3" \
+        "build-tools;31.0.0" \
+        "platforms;android-30" \
+        "platforms;android-31" \
+        "platforms;android-32" \
+        "platforms;android-33" \
+        "extras;android;m2repository" \
+        "patcher;v4" \
+        "extras;google;m2repository" \
+        "extras;m2repository;com;android;support;constraint;constraint-layout;1.0.2" \
+        "cmake;3.10.2.4988404" \
+        "cmake;3.22.1" \
+ && rm -rf "${ANDROID_HOME}/licenses"
+
+WORKDIR /src
