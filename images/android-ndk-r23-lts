@@ -28,6 +28,7 @@ RUN set -eu \
         "platform-tools" \
         "build-tools;30.0.3" \
         "build-tools;33.0.0" \
+        "platforms;android-30" \
         "platforms;android-33" \
         "extras;android;m2repository" \
         "patcher;v4" \
