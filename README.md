@@ -8,7 +8,11 @@ This repository contains Docker files for running [Mapbox GL](https://github.com
 
 ### Adding a new image
 
-When you want to add a new image, e.g. a new compiler version or a new Android NDK version, duplicate an existing file in the `images` directory, annd change it to suit your needs. There's usually no need to keep previous versions of e.g. the Android NDK around. Legacy branches of mapbox-gl-native will use legacy Docker images that contain the legacy NDKs.
+When you want to add a new image, e.g. a new compiler version or a new Android NDK version, duplicate an existing file in the `images` directory, and change it to suit your needs. There's usually no need to keep previous versions of e.g. the Android NDK around. Legacy branches of mapbox-gl-native will use legacy Docker images that contain the legacy NDKs.
+
+### Updating a new image
+
+When you want to update an existing image, e.g. update dependencies, new feature, edit an existing file in the `images` directory, and change it to suit your needs. If the image you're modifying serves as a base for other images you also need to build the derived images, for example [PR#88](https://github.com/mapbox/mbgl-ci-images/pull/88).
 
 ### Workflow
 
