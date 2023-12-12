@@ -54,3 +54,10 @@ ENV ANDROID_NDK_HOME=/android/sdk/ndk-bundle \
 #install Microsoft app center
 RUN set -eu \
  && npm install -g appcenter-cli
+
+# Install Kotlin Command-line compiler (https://kotlinlang.org/docs/command-line.html)
+RUN set -eu \
+ && wget -O /root/kotlin-compiler-1.9.21.zip https://github.com/JetBrains/kotlin/releases/download/v1.9.21/kotlin-compiler-1.9.21.zip \
+ && unzip /root/kotlin-compiler-1.9.21.zip -d / \
+ && rm /root/kotlin-compiler-1.9.21.zip
+ENV PATH="/kotlinc/bin:$PATH"
