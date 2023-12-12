@@ -12,7 +12,7 @@ When you want to add a new image, e.g. a new compiler version or a new Android N
 
 ### Updating a new image
 
-When you want to update an existing image, e.g. update dependencies, new feature, edit an existing file in the `images` directory, and change it to suit your needs. If the image you're modifying serves as a base for other images you also need to build the derived images, for example [PR#88](https://github.com/mapbox/mbgl-ci-images/pull/88).
+When you want to update an existing image, e.g. update dependencies, new feature, etc. edit an existing file in the `images` directory, and change it to suit your needs. If the image you're modifying serves as a base for other images (i.e. used in `FROM` command like in [android-sdk](https://github.com/mapbox/mbgl-ci-images/blob/master/images/android-sdk#L1)) you also need to build the derived images, for example [PR#88](https://github.com/mapbox/mbgl-ci-images/pull/88).
 
 ### Workflow
 
