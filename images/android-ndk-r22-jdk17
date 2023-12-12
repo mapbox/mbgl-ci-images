@@ -49,7 +49,6 @@ RUN set -eu \
         "platforms;android-29" \
         "platforms;android-28" \
         "extras;android;m2repository" \
-        "patcher;v4" \
         "extras;google;m2repository" \
         "extras;m2repository;com;android;support;constraint;constraint-layout;1.0.2" \
         "cmake;3.10.2.4988404" \
