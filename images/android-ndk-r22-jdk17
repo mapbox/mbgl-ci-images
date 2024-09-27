@@ -32,7 +32,7 @@ RUN set -eu \
 RUN set -eu \
  && mkdir -p "${ANDROID_HOME}/licenses" \
  && echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" > "${ANDROID_HOME}/licenses/android-sdk-license" \
- && tools/bin/sdkmanager \
+ && tools/bin/sdkmanager --include_obsolete \
         "--sdk_root=${ANDROID_HOME}" \
         "platform-tools" \
         "build-tools;28.0.3" \
@@ -50,8 +50,10 @@ RUN set -eu \
         "platforms;android-28" \
         "extras;android;m2repository" \
         "extras;google;m2repository" \
-        "extras;m2repository;com;android;support;constraint;constraint-layout;1.0.2" \
         "cmake;3.10.2.4988404" \
  && rm -rf "${ANDROID_HOME}/licenses"
+
+# Accept all Android SDK licenses
+RUN yes | tools/bin/sdkmanager "--sdk_root=${ANDROID_HOME}" --licenses
 
 WORKDIR /src

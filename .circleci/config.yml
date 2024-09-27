@@ -2,16 +2,13 @@ version: 2
 
 jobs:
   build:
-    working_directory: /app
+    working_directory: ~/app
     docker:
-      - image: docker:18.05.0-ce-git
+      - image: cimg/base:2024.10
     steps:
       - checkout
-      - run:
-          name: Install dependencies
-          command: apk add --no-progress bash
       - setup_remote_docker:
-          version: 18.05.0-ce
+          version: docker24
       - run:
           name: Log in to Docker Hub
           command: docker login -u mbgl -p ${DOCKER_PASS}
