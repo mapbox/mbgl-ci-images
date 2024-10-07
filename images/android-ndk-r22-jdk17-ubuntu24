@@ -1,0 +1,128 @@
+FROM amd64/ubuntu:noble-20240904.1
+
+# Avoid attempting to open dialog boxes
+ENV DEBIAN_FRONTEND="noninteractive"
+
+# Additional filesystems
+ADD filesystem/libsysconfcpus.tar.gz /
+
+# Install base packages
+RUN set -eu \
+ && apt-get update \
+ && apt-get -y install sudo git curl python3 python-is-python3 wget make python3-pip zip zlib1g \
+ && apt-get -y install software-properties-common \
+ && rm -rf /var/lib/apt/lists/*
+
+RUN set -eu \
+ && apt-get update \
+ && apt-get -y install unzip ccache openjdk-11-jdk-headless apt-transport-https software-properties-common \
+ && rm -rf /var/lib/apt/lists/*
+
+# Install CLI tools for CI scripting
+RUN (type -p wget >/dev/null || (sudo apt update && sudo apt-get install wget -y)) \
+	&& sudo mkdir -p -m 755 /etc/apt/keyrings \
+	&& wget -qO- https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null \
+	&& sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
+	&& echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+	&& sudo apt update \
+	&& sudo apt install jq gh -y
+
+# Install gcloud for Firebase testing
+RUN set -eu \
+  && echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list \
+  && wget -O - https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - \
+  && apt-get update -y \
+  && apt-get install google-cloud-sdk -y \
+  && apt-get autoremove --purge -y && apt-get clean
+
+# Install libffi for sdk-cicd
+RUN set -eu \
+  apt-get update -y && apt-get -y install libffi-dev
+
+# Install awscli
+RUN set -eu \
+ && pip3 install awscli --break-system-packages
+
+# Install Node.js
+# Check https://nodejs.org/en/download/releases/ for releases
+ENV NVM_DIR="/root/.nvm" \
+    PATH="/root/.nvm/versions/node/v10.13.0/bin:$PATH"
+RUN set -e \
+ && git -c advice.detachedHead=false clone https://github.com/creationix/nvm.git -b v0.33.11 --depth=1 "$NVM_DIR" \
+ && . "$NVM_DIR/nvm.sh" \
+ && nvm install v10.13.0
+
+ENV ANDROID_NDK_HOME=/android/sdk/ndk-bundle \
+    ANDROID_HOME=/android/sdk \
+    GRADLE_OPTS=-Dorg.gradle.daemon=false
+
+#install Microsoft app center
+RUN set -eu \
+ && npm install -g appcenter-cli
+
+# Install Kotlin Command-line compiler (https://kotlinlang.org/docs/command-line.html)
+RUN set -eu \
+ && wget -O /root/kotlin-compiler-1.9.21.zip https://github.com/JetBrains/kotlin/releases/download/v1.9.21/kotlin-compiler-1.9.21.zip \
+ && unzip /root/kotlin-compiler-1.9.21.zip -d / \
+ && rm /root/kotlin-compiler-1.9.21.zip
+ENV PATH="/kotlinc/bin:$PATH"
+
+### images/android-ndk-r22-jdk17 ###
+
+WORKDIR /android/sdk
+
+# Install JDK 17
+RUN set -eu \
+ && add-apt-repository ppa:openjdk-r/ppa
+ENV JAVA_HOME=/usr/lib/jvm/java-1.17.0-openjdk-amd64
+RUN set -eu \
+ && apt-get update \
+ && apt-get -y install openjdk-17-jdk-headless \
+ && rm -rf /var/lib/apt/lists/*
+
+# Install Android SDK
+# Use most recent version from https://developer.android.com/studio/index.html#command-tools
+# and update the checksum.
+RUN set -eu \
+ && curl -L --retry 3 https://dl.google.com/android/repository/commandlinetools-linux-6200805_latest.zip -o tools.zip \
+ && (echo "f10f9d5bca53cc27e2d210be2cbc7c0f1ee906ad9b868748d74d62e10f2c8275  tools.zip" | sha256sum -c) \
+ && unzip -q tools.zip && rm tools.zip
+
+# Install Android NDK
+# Use desired version from https://developer.android.com/ndk/downloads/index.html
+# and update the checksum.
+RUN set -eu \
+ && curl -L --retry 3 https://dl.google.com/android/repository/android-ndk-r22-linux-x86_64.zip -o ndk.zip \
+ && (echo "82274313aba10da6177fd41868f56a0f9651dd81  ndk.zip" | sha1sum -c) \
+ && unzip -q ndk.zip && rm ndk.zip && mv android-ndk-r* ndk-bundle
+
+# Install dependencies and build tools
+
+RUN set -eu \
+ && mkdir -p "${ANDROID_HOME}/licenses" \
+ && echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" > "${ANDROID_HOME}/licenses/android-sdk-license" \
+ && tools/bin/sdkmanager --include_obsolete \
+        "--sdk_root=${ANDROID_HOME}" \
+        "platform-tools" \
+        "build-tools;28.0.3" \
+        "build-tools;29.0.2" \
+        "build-tools;29.0.3" \
+        "build-tools;30.0.2" \
+        "build-tools;30.0.3" \
+        "build-tools;33.0.2" \
+        "platforms;android-34" \
+        "platforms;android-33" \
+        "platforms;android-32" \            
+        "platforms;android-31" \
+        "platforms;android-30" \
+        "platforms;android-29" \
+        "platforms;android-28" \
+        "extras;android;m2repository" \
+        "extras;google;m2repository" \
+        "cmake;3.10.2.4988404" \
+ && rm -rf "${ANDROID_HOME}/licenses"
+
+# Accept all Android SDK licenses
+RUN yes | tools/bin/sdkmanager "--sdk_root=${ANDROID_HOME}" --licenses
+
+WORKDIR /src
