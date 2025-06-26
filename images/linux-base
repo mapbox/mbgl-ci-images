@@ -15,9 +15,18 @@ RUN set -eu \
  && (find /tmp/*.gpg | xargs -n1 apt-key add) \
  && rm /tmp/*.gpg
 
+# First install apt-transport-https and ca-certificates before updating with HTTPS sources
+RUN set -eu \
+ && mv /etc/apt/sources.list.d /etc/apt/sources.list.d.bak \
+ && mkdir -p /etc/apt/sources.list.d \
+ && apt-get update \
+ && apt-get -y install apt-transport-https ca-certificates \
+ && rm -rf /etc/apt/sources.list.d \
+ && mv /etc/apt/sources.list.d.bak /etc/apt/sources.list.d \
+ && apt-get update
+
 # Install base packages
 RUN set -eu \
- && apt-get update \
  && apt-get -y install git curl python python3 python3-pip zlib1g-dev libcurl3 xvfb \
  && rm -rf /var/lib/apt/lists/*
 
@@ -35,8 +44,8 @@ RUN set -eu \
 
 # Install awscli
 RUN set -eu \
- && (curl https://bootstrap.pypa.io/get-pip.py | python) \
- && pip install awscli
+ && (curl https://bootstrap.pypa.io/pip/3.5/get-pip.py | python3) \
+ && pip3 install awscli
 
 # Install CMake
 # Check https://cmake.org/download/ for releases + hashes
@@ -63,9 +72,9 @@ RUN set -eu \
 # Install Node.js
 # Check https://nodejs.org/en/download/releases/ for releases
 ENV NVM_DIR="/root/.nvm" \
-    PATH="/root/.nvm/versions/node/v10.13.0/bin:$PATH"
+    PATH="/root/.nvm/versions/node/v22.17.0/bin:$PATH"
 RUN set -e \
- && git -c advice.detachedHead=false clone https://github.com/creationix/nvm.git -b v0.33.11 --depth=1 "$NVM_DIR" \
+ && git -c advice.detachedHead=false clone https://github.com/nvm-sh/nvm.git -b v0.40.3 --depth=1 "$NVM_DIR" \
  && . "$NVM_DIR/nvm.sh" \
  && nvm install v8.12.0 \
  && nvm install v10.13.0 \
