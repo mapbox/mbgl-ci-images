@@ -68,4 +68,6 @@ RUN set -e \
  && git -c advice.detachedHead=false clone https://github.com/creationix/nvm.git -b v0.33.11 --depth=1 "$NVM_DIR" \
  && . "$NVM_DIR/nvm.sh" \
  && nvm install v8.12.0 \
- && nvm install v10.13.0
+ && nvm install v10.13.0 \
+ && nvm install v22.17.0 \
+ && nvm alias default v22.17.0
